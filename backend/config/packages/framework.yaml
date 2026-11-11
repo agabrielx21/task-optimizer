@@ -1,0 +1,8 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    # Stateless JSON API: no sessions needed.
+    session: false
+
+when@test:
+    framework:
+        test: true

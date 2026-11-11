@@ -1,0 +1,26 @@
+parameters:
+    # No .env file: APP_SECRET comes from the real environment, with a default for local use.
+    env(APP_SECRET): 'local-dev-secret-change-me'
+    # Bundled default input used when no payload / file arguments are given.
+    app.employees_file: '%kernel.project_dir%/data/employees.json'
+    app.tasks_file: '%kernel.project_dir%/data/tasks.json'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            string $defaultEmployeesFile: '%app.employees_file%'
+            string $defaultTasksFile: '%app.tasks_file%'
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
+            - '../src/Domain/'
+
+when@test:
+    services:
+        # No logging bundle installed: keep the kernel's default stderr logger quiet in tests.
+        logger:
+            class: Psr\Log\NullLogger
