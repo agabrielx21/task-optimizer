@@ -57,9 +57,10 @@ cd task-optimizer
 
 ```
 task-optimizer/
-  backend/             Symfony API + CLI      (backend/README.md: algorithms, API contract)
+  backend/             Symfony API + CLI      
   frontend/            Nuxt dashboard         (frontend/README.md: architecture, requirements map)
   docker-compose.yml   both together
+  README.md: algorithms    API contract
   SETUP.md             this file
 ```
 
