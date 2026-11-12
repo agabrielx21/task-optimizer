@@ -1,7 +1,7 @@
-# Backend image: PHP 8.3 CLI + Composer, served by PHP's built-in web server.
+# Backend image: PHP 8.5.12 CLI + Composer, served by PHP's built-in web server.
 FROM composer:2 AS composer
 
-FROM php:8.3-cli
+FROM php:8.5.12-cli
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git unzip \

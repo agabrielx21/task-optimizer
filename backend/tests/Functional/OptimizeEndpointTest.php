@@ -9,8 +9,23 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * Uses tests/fixtures as the default data (via APP_DATA_DIR): the expected numbers stay valid
+ * even after someone saves different data into data/*.json.
+ */
 final class OptimizeEndpointTest extends WebTestCase
 {
+    protected function setUp(): void
+    {
+        $_ENV['APP_DATA_DIR'] = $_SERVER['APP_DATA_DIR'] = dirname(__DIR__).'/fixtures';
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        unset($_ENV['APP_DATA_DIR'], $_SERVER['APP_DATA_DIR']);
+    }
+
     public function testCostEndpointWithBundledData(): void
     {
         $client = static::createClient();

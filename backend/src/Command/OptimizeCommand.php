@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Domain\Variant;
-use App\Optimizer\InvalidInputException;
-use App\Optimizer\OptimizationService;
+use App\Optimizer\Input\InvalidInputException;
+use App\Service\OptimizationService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,14 +14,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * bin/console app:optimize --variant=cost|makespan [employees.json] [tasks.json]
- *
- * Prints the same JSON as the HTTP endpoint. Exit codes: 0 feasible, 1 invalid input, 2 bad --variant, 3 infeasible.
- */
 #[AsCommand(name: 'app:optimize', description: 'Assign tasks to employees (minimum cost or minimum makespan)')]
 final class OptimizeCommand extends Command
 {
+    // Exit codes: 0 feasible, 1 invalid input, 2 bad --variant, 3 infeasible.
     public const EXIT_INFEASIBLE = 3;
 
     public function __construct(private readonly OptimizationService $service)

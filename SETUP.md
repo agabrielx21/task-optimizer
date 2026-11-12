@@ -1,14 +1,12 @@
-# Local hosting — setup checklist (temporary, kept up to date while building)
+# Local hosting — setup checklist
 
 How to get the whole app (Symfony backend + Nuxt frontend) running on a fresh machine.
-Items marked **(planned)** don't exist yet; this file is updated as each part lands.
 
 | Part | Status |
 |---|---|
-| Backend (Symfony 7.4, PHP 8.3) | done — 101 tests green |
-| Backend Docker image | written, **not yet built on a real machine** |
-| Frontend (Nuxt + Tailwind) | **(planned)** |
-| docker-compose (backend + frontend) | **(planned)** |
+| Backend (Symfony 7.4, PHP 8.5) | done — PHPUnit green, Docker image built and verified on Windows |
+| Frontend (Nuxt 4 + Tailwind 4) | done — Vitest green, verified against the live backend |
+| docker-compose (backend + frontend) | written, **not yet run on a real machine** |
 
 ---
 
@@ -23,29 +21,30 @@ Pick **one** route. Route A needs only Docker; route B runs everything natively.
 | Docker Desktop (Windows/macOS) or Docker Engine + Compose plugin (Linux) | recent | `docker --version`, `docker compose version` |
 | Git (to clone) | any | `git --version` |
 
-Windows: Docker Desktop needs **WSL 2** enabled (Docker Desktop's installer offers it) and Docker
-Desktop must be **running** before any `docker` command.
+Windows: Docker Desktop needs **WSL 2** (`wsl --install`) and must be **running** ("Engine running")
+before any `docker` command. The Chocolatey package `docker-cli` alone is not enough: install
+`docker-desktop`.
 
 ### Route B — native (needed for development)
 
 | Tool | Version | Check |
 |---|---|---|
-| PHP | **8.3.x** (8.4 also works) | `php -v` |
+| PHP | **8.5.x** (Docker image uses 8.5.12) | `php -v` |
 | PHP extensions | ctype, iconv, mbstring, dom, xml, xmlwriter, tokenizer, openssl | `php -m` |
 | Composer | 2.x | `composer -V` |
-| Node.js **(planned, frontend)** | 22 or 24 LTS | `node -v` |
-| npm (ships with Node) **(planned)** | 10+ | `npm -v` |
+| Node.js | **22.22.3+ or 24.15+** (Nuxt 4.6 requirement; 24 LTS recommended) | `node -v` |
+| npm (ships with Node) | 10+ | `npm -v` |
 | Git | any | `git --version` |
 
 Install hints:
 
-- **Windows**: PHP "VS16 x64 Non Thread Safe" zip from <https://windows.php.net/download>, unzip to
+- **Windows**: PHP "VS17 x64 Non Thread Safe" zip from <https://windows.php.net/download>, unzip to
   e.g. `C:\php`, add it to `PATH`. Copy `php.ini-development` to `php.ini` and uncomment:
   `extension_dir = "ext"`, `extension=mbstring`, `extension=openssl` (Composer needs it for HTTPS).
-  Then run `Composer-Setup.exe` from <https://getcomposer.org/download/>. Node: installer from
-  <https://nodejs.org>.
-- **macOS**: `brew install php@8.3 composer node`
-- **Ubuntu/Debian**: `sudo apt install php8.3-cli php8.3-xml php8.3-mbstring unzip`, Composer from
+  Then `Composer-Setup.exe` from <https://getcomposer.org/download/>. Node: LTS installer from
+  <https://nodejs.org> (or `choco install nodejs-lts`).
+- **macOS**: `brew install php composer node`
+- **Ubuntu/Debian**: `sudo apt install php8.5-cli php8.5-xml php8.5-mbstring unzip`, Composer from
   getcomposer.org, Node from nodejs.org or `nvm`.
 
 ---
@@ -53,32 +52,44 @@ Install hints:
 ## 2. Get the code
 
 ```bash
-git clone <repo-url> task-optimizer      # (planned: repo not created yet)
+git clone https://github.com/agabrielx21/task-optimizer.git
 cd task-optimizer
 ```
 
-Layout:
-
 ```
 task-optimizer/
-  backend/     Symfony API + CLI   (see backend/README.md for algorithms and API contract)
-  frontend/    Nuxt dashboard      (planned)
-  SETUP.md     this file
+  backend/             Symfony API + CLI      (backend/README.md: algorithms, API contract)
+  frontend/            Nuxt dashboard         (frontend/README.md: architecture, requirements map)
+  docker-compose.yml   both together
+  SETUP.md             this file
 ```
 
 ---
 
-## 3. Backend
+## 3. Everything with one command (route A)
 
-### 3.1 Native (route B)
+```bash
+docker compose up --build      # backend :8000, frontend :3000
+```
+
+Open <http://localhost:3000>. Stop with Ctrl+C (or `docker compose down`).
+After changing code: `docker compose up --build` again (images copy the code at build time).
+
+---
+
+## 4. Backend alone
+
+### 4.1 Native
 
 ```bash
 cd backend
-composer install                                   # creates vendor/ and composer.lock
-php vendor/bin/phpunit                             # expect: OK (101 tests ...)
+composer install                                   # installs from composer.lock
+php vendor/bin/phpunit                             # expect: OK (109 tests ...)
 php bin/console app:optimize --variant=makespan    # expect: "makespan": 11
 php -S 127.0.0.1:8000 -t public                    # API on http://127.0.0.1:8000
 ```
+
+Alternative dev server: Symfony CLI, from inside `backend/`: `symfony server:start --no-tls --port=8000`.
 
 Smoke test (second terminal; on Windows use `curl.exe`):
 
@@ -87,56 +98,48 @@ curl -X POST http://127.0.0.1:8000/api/optimize/cost       # totalPrice 17460, m
 curl -X POST http://127.0.0.1:8000/api/optimize/makespan   # makespan 11, isOptimal true
 ```
 
-### 3.2 Docker (route A)
+### 4.2 Docker
 
 ```bash
 cd backend
-docker build -t task-optimizer-backend .
-docker run --rm -p 8000:8000 task-optimizer-backend
+docker build -t task-optimizer-backend .           # "." = this folder is the build context
+docker run -d --name task-optimizer-backend -p 8000:8000 task-optimizer-backend
 docker run --rm task-optimizer-backend php vendor/bin/phpunit     # optional: tests in the container
 ```
 
-Same smoke test as above.
-
 ---
 
-## 4. Frontend **(planned)**
+## 5. Frontend alone
+
+Needs the backend running on :8000 (section 4), or mock mode.
 
 ```bash
 cd frontend
 npm install
-cp .env.example .env        # then set the variables below
-npm run dev                 # http://localhost:3000
+npm run dev              # http://localhost:3000
+npm test                 # Vitest
 ```
 
-The browser only talks to Nuxt; Nuxt's server route calls the PHP API. So the backend must be
-running first (or use mock mode).
+Mock mode (no backend needed):
+PowerShell `$env:NUXT_USE_MOCK="true"; npm run dev` · cmd `set NUXT_USE_MOCK=true && npm run dev` ·
+bash `NUXT_USE_MOCK=true npm run dev`.
+
+Production build: `npm run build`, then `node .output/server/index.mjs`.
+
+The browser only talks to Nuxt; Nuxt's server route calls the PHP API.
 
 ---
 
-## 5. Configuration (environment variables)
+## 6. Configuration (environment variables)
 
-There are **no `.env` files in the backend**: values come from the real environment, with defaults.
+There are **no `.env` files**: values come from the real environment, with defaults.
 
 | Variable | Used by | Default | Notes |
 |---|---|---|---|
 | `APP_SECRET` | backend | `local-dev-secret-change-me` | set a real value if ever exposed beyond localhost |
 | `APP_ENV` | backend | `dev` | `test` is set automatically by PHPUnit |
-| `NUXT_BACKEND_URL` **(planned)** | frontend server | `http://127.0.0.1:8000` | in docker-compose: `http://backend:8000` |
-| `NUXT_USE_MOCK` **(planned)** | frontend server | `false` | `true` → serves `mock-results.json`, no backend needed |
-
-Setting a variable for one command:
-PowerShell `$env:APP_SECRET="..."`, bash `export APP_SECRET=...`.
-
----
-
-## 6. Everything with one command **(planned)**
-
-```bash
-docker compose up --build      # backend :8000, frontend :3000
-```
-
-Open <http://localhost:3000>.
+| `NUXT_BACKEND_URL` | frontend server | `http://127.0.0.1:8000` | docker-compose sets `http://backend:8000` |
+| `NUXT_USE_MOCK` | frontend server | `false` | `true` → serves `server/mock/mock-results.json`, no backend needed |
 
 ---
 
@@ -145,10 +148,10 @@ Open <http://localhost:3000>.
 | Port | Service |
 |---|---|
 | 8000 | backend API |
-| 3000 | frontend (planned) |
+| 3000 | frontend |
 
-If a port is taken, change it: `php -S 127.0.0.1:8080 -t public`, `docker run -p 8080:8000 ...`
-(and point `NUXT_BACKEND_URL` at the new port).
+If a port is taken: `php -S 127.0.0.1:8080 -t public` and `NUXT_BACKEND_URL=http://127.0.0.1:8080`;
+for the frontend `npm run dev -- --port 3001`; in compose change the left side of `"3000:3000"`.
 
 ---
 
@@ -158,19 +161,24 @@ If a port is taken, change it: `php -S 127.0.0.1:8080 -t public`, `docker run -p
 |---|---|
 | `composer install`: "The openssl extension is required" (Windows) | uncomment `extension=openssl` in `php.ini` |
 | `Call to undefined function mb_...` / ctype errors | enable `mbstring` / `ctype` in `php.ini` (`php --ini` shows which file is used) |
-| PHPUnit: "DOMDocument not found" | install/enable the `dom` / `xml` extension (`php8.3-xml` on Ubuntu) |
+| PHPUnit: "DOMDocument not found" | install/enable the `dom` / `xml` extension (`php8.5-xml` on Ubuntu) |
 | "Symfony Runtime is missing" | run `composer install` (it generates `vendor/autoload_runtime.php`); as root also set `COMPOSER_ALLOW_SUPERUSER=1` |
-| `docker: cannot connect to the Docker daemon` | start Docker Desktop and wait until it says "running" |
-| `bind: address already in use` | see section 7 |
-| Changes to PHP files not visible in Docker | the image copies the code at build time: rebuild (`docker build ...`) |
+| Docker build fails at `composer install` (exit code 2) | `composer.lock` was resolved for a different PHP than the image: keep `config.platform.php` in `composer.json` equal to the image's PHP and run `composer update` |
+| `docker: failed to connect to the docker API` / `cannot connect to the Docker daemon` | start Docker Desktop and wait for "Engine running" |
+| `docker build` can't find the Dockerfile | run it inside `backend/` (or `frontend/`), or pass the folder instead of `.` |
+| `bind: address already in use` / `port is already allocated` | stop `php -S` / Symfony server / old container, or see section 7 |
+| Dashboard shows "Backend unreachable (502)" | backend not running or wrong `NUXT_BACKEND_URL`; or use `NUXT_USE_MOCK=true` |
+| `npm install` fails with an engine error | Node too old: Nuxt 4.6 needs 22.22.3+ or 24.15+ |
+| Symfony CLI: every route 404, "unable to detect the front controller" | start it from inside `backend/` (or `--dir=backend`) |
+| Code changes not visible in Docker | rebuild the image (`docker compose up --build`) |
 
 ---
 
 ## 9. Done checklist
 
 - [ ] `php vendor/bin/phpunit` → all green
-- [ ] `POST /api/optimize/cost` → 17,460 / 51h
-- [ ] `POST /api/optimize/makespan` → 11h, `isOptimal: true`
-- [ ] Docker image builds and answers on :8000
-- [ ] (planned) frontend loads, both tabs show results, mock mode works
-- [ ] (planned) `docker compose up --build` brings up both
+- [ ] `POST /api/optimize/cost` → 17,460 / 51h; `POST /api/optimize/makespan` → 11h, `isOptimal: true`
+- [ ] `npm test` (frontend) → all green
+- [ ] Dashboard: both tabs, Compare, filter, timeline; "Load infeasible example" shows the infeasible state
+- [ ] Mock mode (`NUXT_USE_MOCK=true`) works without the backend
+- [ ] `docker compose up --build` → <http://localhost:3000> shows live results

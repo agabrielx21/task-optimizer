@@ -1,0 +1,38 @@
+# Starts backend + frontend together:  docker compose up --build   ->  http://localhost:3000
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"     # optional: only needed to call the API directly from the host
+    environment:
+      APP_SECRET: change-me
+    volumes:
+      # The default data lives on the host: "Save as default data" in the dashboard writes
+      # backend/data/*.json in the project folder, and the saves survive rebuilds.
+      - ./backend/data:/app/data
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      # Server-side call inside the compose network: service name, not localhost.
+      NUXT_BACKEND_URL: http://backend:8000
+      NUXT_USE_MOCK: "false"
+    depends_on:
+      - backend
+
+  # Test runners, started only on demand (profile "test"):
+  #   docker compose run --rm backend-tests
+  #   docker compose run --rm frontend-tests
+  backend-tests:
+    build: ./backend
+    command: php vendor/bin/phpunit
+    profiles: ["test"]
+
+  frontend-tests:
+    build:
+      context: ./frontend
+      target: build        # the build stage still has the dev dependencies (Vitest)
+    command: npm test
+    profiles: ["test"]

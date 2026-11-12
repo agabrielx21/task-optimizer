@@ -4,23 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain;
 
-/**
- * Output of one optimization variant.
- *
- * The derived metrics (total price, makespan, per-employee hours) are computed here, in one place,
- * so both variants report them identically. Optimizers only decide "which task goes to whom".
- */
 final readonly class OptimizationResult
 {
     public const STATUS_FEASIBLE = 'feasible';
     public const STATUS_INFEASIBLE = 'infeasible';
 
-    /**
-     * @param list<array{taskId: int, employeeId: int}>                 $assignments     sorted by taskId
-     * @param list<array{employeeId: int, totalAssignedHours: int}>     $employeeSummary sorted by employeeId, idle employees included
-     * @param list<int>                                                 $unassignableTaskIds
-     * @param array<string, mixed>                                      $meta
-     */
     private function __construct(
         public Variant $variant,
         public string $status,
@@ -33,12 +21,7 @@ final readonly class OptimizationResult
     ) {
     }
 
-    /**
-     * @param list<Employee>   $employees
-     * @param list<Task>       $tasks
-     * @param array<int, int>  $assignment taskId => employeeId (must cover every task)
-     * @param array<string, mixed> $meta
-     */
+    // Price, makespan and hours per employee are computed here, once, for both variants.
     public static function feasible(Variant $variant, array $employees, array $tasks, array $assignment, array $meta = []): self
     {
         $employeesById = [];
@@ -77,9 +60,6 @@ final readonly class OptimizationResult
         return new self($variant, self::STATUS_FEASIBLE, $assignments, $totalPrice, $makespan, $summary, [], $meta);
     }
 
-    /**
-     * @param list<int> $unassignableTaskIds
-     */
     public static function infeasible(Variant $variant, array $unassignableTaskIds): self
     {
         sort($unassignableTaskIds);
@@ -92,9 +72,6 @@ final readonly class OptimizationResult
         return self::STATUS_FEASIBLE === $this->status;
     }
 
-    /**
-     * @return array<string, mixed> the API / CLI contract
-     */
     public function toArray(): array
     {
         return [
@@ -105,7 +82,8 @@ final readonly class OptimizationResult
             'makespan' => $this->makespan,
             'employeeSummary' => $this->employeeSummary,
             'unassignableTaskIds' => $this->unassignableTaskIds,
-            'meta' => (object) $this->meta, // always a JSON object, even when empty
+            // object: an empty meta is {} in JSON, not []
+            'meta' => (object) $this->meta,
         ];
     }
 }

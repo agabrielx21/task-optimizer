@@ -1,0 +1,26 @@
+{
+  "name": "task-optimizer-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "test": "vitest run",
+    "mock:update": "node scripts/update-mock.mjs"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "nuxt": "^4.6.4",
+    "tailwindcss": "^4.3.5",
+    "vue": "^3.5.45",
+    "vue-router": "^5.5.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9",
+    "vitest": "^5.1.0",
+    "vue-tsc": "^3.3.14"
+  }
+}

@@ -1,0 +1,352 @@
+{
+  "cost": {
+    "variant": "cost",
+    "status": "feasible",
+    "assignments": [
+      {
+        "taskId": 1,
+        "employeeId": 8
+      },
+      {
+        "taskId": 2,
+        "employeeId": 4
+      },
+      {
+        "taskId": 3,
+        "employeeId": 4
+      },
+      {
+        "taskId": 4,
+        "employeeId": 8
+      },
+      {
+        "taskId": 5,
+        "employeeId": 4
+      },
+      {
+        "taskId": 6,
+        "employeeId": 4
+      },
+      {
+        "taskId": 7,
+        "employeeId": 8
+      },
+      {
+        "taskId": 8,
+        "employeeId": 4
+      },
+      {
+        "taskId": 9,
+        "employeeId": 4
+      },
+      {
+        "taskId": 10,
+        "employeeId": 4
+      },
+      {
+        "taskId": 11,
+        "employeeId": 4
+      },
+      {
+        "taskId": 12,
+        "employeeId": 8
+      },
+      {
+        "taskId": 13,
+        "employeeId": 4
+      },
+      {
+        "taskId": 14,
+        "employeeId": 4
+      },
+      {
+        "taskId": 15,
+        "employeeId": 4
+      },
+      {
+        "taskId": 16,
+        "employeeId": 4
+      },
+      {
+        "taskId": 17,
+        "employeeId": 8
+      },
+      {
+        "taskId": 18,
+        "employeeId": 4
+      },
+      {
+        "taskId": 19,
+        "employeeId": 4
+      },
+      {
+        "taskId": 20,
+        "employeeId": 8
+      },
+      {
+        "taskId": 21,
+        "employeeId": 4
+      },
+      {
+        "taskId": 22,
+        "employeeId": 8
+      },
+      {
+        "taskId": 23,
+        "employeeId": 8
+      },
+      {
+        "taskId": 24,
+        "employeeId": 4
+      },
+      {
+        "taskId": 25,
+        "employeeId": 4
+      },
+      {
+        "taskId": 26,
+        "employeeId": 8
+      },
+      {
+        "taskId": 27,
+        "employeeId": 8
+      },
+      {
+        "taskId": 28,
+        "employeeId": 4
+      },
+      {
+        "taskId": 29,
+        "employeeId": 4
+      },
+      {
+        "taskId": 30,
+        "employeeId": 4
+      }
+    ],
+    "totalPrice": 17460,
+    "makespan": 51,
+    "employeeSummary": [
+      {
+        "employeeId": 1,
+        "totalAssignedHours": 0
+      },
+      {
+        "employeeId": 2,
+        "totalAssignedHours": 0
+      },
+      {
+        "employeeId": 3,
+        "totalAssignedHours": 0
+      },
+      {
+        "employeeId": 4,
+        "totalAssignedHours": 51
+      },
+      {
+        "employeeId": 5,
+        "totalAssignedHours": 0
+      },
+      {
+        "employeeId": 6,
+        "totalAssignedHours": 0
+      },
+      {
+        "employeeId": 7,
+        "totalAssignedHours": 0
+      },
+      {
+        "employeeId": 8,
+        "totalAssignedHours": 27
+      },
+      {
+        "employeeId": 9,
+        "totalAssignedHours": 0
+      },
+      {
+        "employeeId": 10,
+        "totalAssignedHours": 0
+      }
+    ],
+    "unassignableTaskIds": [],
+    "meta": {
+      "isOptimal": true
+    }
+  },
+  "makespan": {
+    "variant": "makespan",
+    "status": "feasible",
+    "assignments": [
+      {
+        "taskId": 1,
+        "employeeId": 8
+      },
+      {
+        "taskId": 2,
+        "employeeId": 4
+      },
+      {
+        "taskId": 3,
+        "employeeId": 7
+      },
+      {
+        "taskId": 4,
+        "employeeId": 5
+      },
+      {
+        "taskId": 5,
+        "employeeId": 7
+      },
+      {
+        "taskId": 6,
+        "employeeId": 3
+      },
+      {
+        "taskId": 7,
+        "employeeId": 6
+      },
+      {
+        "taskId": 8,
+        "employeeId": 3
+      },
+      {
+        "taskId": 9,
+        "employeeId": 9
+      },
+      {
+        "taskId": 10,
+        "employeeId": 9
+      },
+      {
+        "taskId": 11,
+        "employeeId": 4
+      },
+      {
+        "taskId": 12,
+        "employeeId": 8
+      },
+      {
+        "taskId": 13,
+        "employeeId": 4
+      },
+      {
+        "taskId": 14,
+        "employeeId": 9
+      },
+      {
+        "taskId": 15,
+        "employeeId": 7
+      },
+      {
+        "taskId": 16,
+        "employeeId": 7
+      },
+      {
+        "taskId": 17,
+        "employeeId": 5
+      },
+      {
+        "taskId": 18,
+        "employeeId": 3
+      },
+      {
+        "taskId": 19,
+        "employeeId": 2
+      },
+      {
+        "taskId": 20,
+        "employeeId": 1
+      },
+      {
+        "taskId": 21,
+        "employeeId": 4
+      },
+      {
+        "taskId": 22,
+        "employeeId": 10
+      },
+      {
+        "taskId": 23,
+        "employeeId": 1
+      },
+      {
+        "taskId": 24,
+        "employeeId": 2
+      },
+      {
+        "taskId": 25,
+        "employeeId": 2
+      },
+      {
+        "taskId": 26,
+        "employeeId": 6
+      },
+      {
+        "taskId": 27,
+        "employeeId": 10
+      },
+      {
+        "taskId": 28,
+        "employeeId": 7
+      },
+      {
+        "taskId": 29,
+        "employeeId": 4
+      },
+      {
+        "taskId": 30,
+        "employeeId": 7
+      }
+    ],
+    "totalPrice": 26400,
+    "makespan": 11,
+    "employeeSummary": [
+      {
+        "employeeId": 1,
+        "totalAssignedHours": 6
+      },
+      {
+        "employeeId": 2,
+        "totalAssignedHours": 11
+      },
+      {
+        "employeeId": 3,
+        "totalAssignedHours": 10
+      },
+      {
+        "employeeId": 4,
+        "totalAssignedHours": 10
+      },
+      {
+        "employeeId": 5,
+        "totalAssignedHours": 5
+      },
+      {
+        "employeeId": 6,
+        "totalAssignedHours": 6
+      },
+      {
+        "employeeId": 7,
+        "totalAssignedHours": 10
+      },
+      {
+        "employeeId": 8,
+        "totalAssignedHours": 5
+      },
+      {
+        "employeeId": 9,
+        "totalAssignedHours": 10
+      },
+      {
+        "employeeId": 10,
+        "totalAssignedHours": 5
+      }
+    ],
+    "unassignableTaskIds": [],
+    "meta": {
+      "isOptimal": true,
+      "lowerBound": 11,
+      "searchNodes": 0
+    }
+  }
+}

@@ -1,9 +1,11 @@
 parameters:
     # No .env file: APP_SECRET comes from the real environment, with a default for local use.
     env(APP_SECRET): 'local-dev-secret-change-me'
-    # Bundled default input used when no payload / file arguments are given.
-    app.employees_file: '%kernel.project_dir%/data/employees.json'
-    app.tasks_file: '%kernel.project_dir%/data/tasks.json'
+    # Default input (used when no payload / file arguments are given, and overwritten by PUT /api/data).
+    # The folder can be changed with APP_DATA_DIR; the tests point it at a temporary folder.
+    env(APP_DATA_DIR): '%kernel.project_dir%/data'
+    app.employees_file: '%env(APP_DATA_DIR)%/employees.json'
+    app.tasks_file: '%env(APP_DATA_DIR)%/tasks.json'
 
 services:
     _defaults:

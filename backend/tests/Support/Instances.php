@@ -7,7 +7,7 @@ namespace App\Tests\Support;
 use App\Domain\Employee;
 use App\Domain\OptimizationResult;
 use App\Domain\Task;
-use App\Optimizer\InputValidator;
+use App\Optimizer\Input\InputValidator;
 use PHPUnit\Framework\Assert;
 use Random\Engine\Mt19937;
 use Random\Randomizer;
@@ -23,7 +23,7 @@ final class Instances
      */
     public static function bundled(): array
     {
-        $dir = dirname(__DIR__, 2).'/data';
+        $dir = dirname(__DIR__).'/fixtures';
 
         return (new InputValidator())->validate(
             json_decode((string) file_get_contents("$dir/employees.json"), true),
