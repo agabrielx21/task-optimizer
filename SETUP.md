@@ -61,7 +61,7 @@ task-optimizer/
   frontend/            Nuxt dashboard         (frontend/README.md: architecture, requirements map)
   docker-compose.yml   both together
   README.md   
-  SETUP.md             this file
+  SETUP.md             
 ```
 
 ---
