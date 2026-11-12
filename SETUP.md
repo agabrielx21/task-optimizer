@@ -1,12 +1,11 @@
-# Local hosting — setup checklist
+# Local hosting — setup checklist & Docker alternative
 
 How to get the whole app (Symfony backend + Nuxt frontend) running on a fresh machine.
 
 | Part | Status |
 |---|---|
-| Backend (Symfony 7.4, PHP 8.5) | done — PHPUnit green, Docker image built and verified on Windows |
-| Frontend (Nuxt 4 + Tailwind 4) | done — Vitest green, verified against the live backend |
-| docker-compose (backend + frontend) | written, **not yet run on a real machine** |
+| Backend (Symfony 7.4, PHP 8.5) | PHPUnit green, Docker image built and verified on Windows |
+| Frontend (Nuxt 4 + Tailwind 4) | Vitest green, Docker image built and verified against the live backend |
 
 ---
 
@@ -171,14 +170,3 @@ for the frontend `npm run dev -- --port 3001`; in compose change the left side o
 | `npm install` fails with an engine error | Node too old: Nuxt 4.6 needs 22.22.3+ or 24.15+ |
 | Symfony CLI: every route 404, "unable to detect the front controller" | start it from inside `backend/` (or `--dir=backend`) |
 | Code changes not visible in Docker | rebuild the image (`docker compose up --build`) |
-
----
-
-## 9. Done checklist
-
-- [ ] `php vendor/bin/phpunit` → all green
-- [ ] `POST /api/optimize/cost` → 17,460 / 51h; `POST /api/optimize/makespan` → 11h, `isOptimal: true`
-- [ ] `npm test` (frontend) → all green
-- [ ] Dashboard: both tabs, Compare, filter, timeline; "Load infeasible example" shows the infeasible state
-- [ ] Mock mode (`NUXT_USE_MOCK=true`) works without the backend
-- [ ] `docker compose up --build` → <http://localhost:3000> shows live results
