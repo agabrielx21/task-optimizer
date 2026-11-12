@@ -74,27 +74,3 @@ shared/                      used by app and server
   data/                      bundled copy of the default data, used only in mock mode
 tests/                       Vitest
 ```
-
-## How each requirement is met
-
-| Requirement | Where |
-|---|---|
-| Configurable backend URL, mock mode | `nuxt.config.ts` runtimeConfig, `server/api/optimize.post.ts` |
-| useFetch, loading and error states, backend unreachable | `pages/index.vue` (`useFetch`), `LoadingState`, `ErrorState` |
-| Variant switcher | `VariantTabs` (Min Cost / Min Makespan / Compare) |
-| Summary cards | `SummaryCards`: total price, makespan, tasks, employees with work (+ optimality note) |
-| Assignments table + employee filter | `AssignmentsTable` (filtered rows and totals come from the composable) |
-| Workload bars, makespan highlighted, idle muted | `WorkloadChart`: width = hours / makespan |
-| Infeasible state | `InfeasibleState` replaces cards, chart, timeline and table |
-| Components, derived data in computed/composable | `components/`, `useDashboard` + `utils/dashboard.ts` |
-| **Nice to have** | |
-| Shared TS types kept in sync | `shared/types/api.ts` + `isOptimizationResult` (checked on every backend response and in a test over real backend output) |
-| Variant in URL | `?variant=cost\|makespan\|compare` |
-| Side-by-side comparison | `ComparisonPanel`: price and makespan difference |
-| Gantt timeline | `GanttTimeline`: tasks back to back from t = 0, in task-id order (order does not change the makespan) |
-| Upload / edit JSON and re-run | `InputEditor`: textareas, file upload, reset, infeasible example; changing the input re-runs `useFetch`. **Save as default data** (with confirmation) writes the backend's `data/*.json` |
-| Vitest | `tests/`: data join + cost calculation, workload, Gantt, comparison, contract, input parsing |
-| docker-compose | `../docker-compose.yml` |
-
-Numbers are formatted with a fixed `en-US` locale so server-rendered HTML and the browser
-produce the same text (no hydration mismatch).
