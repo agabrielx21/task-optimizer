@@ -60,7 +60,7 @@ task-optimizer/
   backend/             Symfony API + CLI      
   frontend/            Nuxt dashboard         (frontend/README.md: architecture, requirements map)
   docker-compose.yml   both together
-  README.md: algorithms    API contract
+  README.md   
   SETUP.md             this file
 ```
 
